@@ -40,7 +40,7 @@ def vanilla_download(versions):
         version_object = json.loads(version_json)
 
         version_download_url = version_object["downloads"]["server"]["url"]
-        output_dir = os.path.join("versions", version)
+        output_dir = os.path.join("versions/vanilla", version)
         output_file = os.path.join(output_dir, f"{version}.jar")
         os.makedirs(output_dir, exist_ok=True)
 
