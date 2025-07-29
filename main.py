@@ -1,6 +1,6 @@
 import argparse
 
-from modloaders.vanilla import vanillaDownload
+from modloaders.vanilla import vanilla_download
 
 def main():
     parser = argparse.ArgumentParser(description='Universal Version Downloader')
@@ -11,11 +11,11 @@ def main():
     args = parser.parse_args()
     print("You selected " + args.modloader + " on " + args.version)
 
-    selectedModloader = args.modloader.lower()
+    selected_modloader = args.modloader.lower()
 
-    match selectedModloader:
+    match selected_modloader:
         case "vanilla":
-            vanillaDownload(args.version)
+            vanilla_download(args.version)
         case _:
             print("Invalid Modloader")
 

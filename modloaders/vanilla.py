@@ -2,49 +2,49 @@ import requests
 import json
 import os
 
-def vanillaDownload(version):
+def vanilla_download(version):
     print("Downloading Vanilla " + version)
-    manifestUrl = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
-    manifestJSON = ""
+    manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+    manifest_json = ""
 
     try:
-        response = requests.get(manifestUrl)
+        response = requests.get(manifest_url)
         response.raise_for_status()
 
-        manifestJSON = response.text
+        manifest_json = response.text
 
         print("Manifest JSON saved successfully")
     except requests.exceptions.RequestException as e:
         print(f"Error saving manifest: {e}")
 
-    versionUrl = ""
-    versionJSON = ""
+    version_url = ""
+    version_json = ""
 
-    manifestObject = json.loads(manifestJSON)
-    for manifestVersion in manifestObject["versions"]:
-        if manifestVersion["id"] == version:
-            print("Downloading " + manifestVersion["url"])
-            versionUrl = manifestVersion["url"]
+    manifest_object = json.loads(manifest_json)
+    for manifest_version in manifest_object["versions"]:
+        if manifest_version["id"] == version:
+            print("Downloading " + manifest_version["url"])
+            version_url = manifest_version["url"]
 
     try:
-        response = requests.get(versionUrl)
+        response = requests.get(version_url)
         response.raise_for_status()
 
-        versionJSON = response.text
+        version_json = response.text
 
         print("Version JSON saved successfully")
     except requests.exceptions.RequestException as e:
         print(f"Error saving version: {e}")
 
-    versionObject = json.loads(versionJSON)
+    version_object = json.loads(version_json)
 
-    versionDownloadURL = versionObject["downloads"]["server"]["url"]
+    version_download_url = version_object["downloads"]["server"]["url"]
     output_dir = os.path.join("versions", version)
     output_file = os.path.join(output_dir, f"{version}.jar")
     os.makedirs(output_dir, exist_ok=True)
 
     try:
-        response = requests.get(versionDownloadURL, stream=True)
+        response = requests.get(version_download_url, stream=True)
         response.raise_for_status()
 
         print("Downloading Vanilla " + version + " JAR file")
