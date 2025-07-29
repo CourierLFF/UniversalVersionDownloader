@@ -1,5 +1,6 @@
 import argparse
 
+from modloaders.fabric import fabric_download
 from modloaders.vanilla import vanilla_download
 
 def main():
@@ -16,6 +17,8 @@ def main():
     match selected_modloader:
         case "vanilla":
             vanilla_download(args.versions)
+        case "fabric":
+            fabric_download(args.versions)
         case _:
             print("Invalid Modloader")
 
