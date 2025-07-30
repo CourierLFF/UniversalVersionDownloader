@@ -32,3 +32,4 @@ def fabric_download(versions):
 
         except requests.exceptions.RequestException as e:
             print(f"Error downloading version: {e}")
+            continue

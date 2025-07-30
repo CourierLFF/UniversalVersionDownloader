@@ -36,6 +36,7 @@ def vanilla_download(versions):
             print("Version JSON saved successfully")
         except requests.exceptions.RequestException as e:
             print(f"Error saving version: {e}")
+            continue
 
         version_object = json.loads(version_json)
 
