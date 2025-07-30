@@ -4,6 +4,7 @@ import os
 
 def paper_download(versions):
     for version in versions:
+        print("Downloading Paper " + version)
         paper_builds_url = f"https://fill.papermc.io/v3/projects/paper/versions/{version}/builds"
         paper_builds_json = ""
 
