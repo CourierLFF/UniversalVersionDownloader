@@ -6,7 +6,7 @@ from modloaders.vanilla import vanilla_download
 def main():
     parser = argparse.ArgumentParser(description='Universal Version Downloader')
 
-    parser.add_argument('modloader', type=str, help='Selected Modloader')
+    parser.add_argument('modloader', type=str, help='Selected Modloader (Vanilla, Fabric)')
     parser.add_argument('versions', nargs='+', help='Selected Version or Versions')
 
     args = parser.parse_args()
