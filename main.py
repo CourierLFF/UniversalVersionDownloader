@@ -1,20 +1,20 @@
 import argparse
 
-from modloaders.fabric import fabric_download
-from modloaders.paper import paper_download
-from modloaders.purpur import purpur_download
-from modloaders.vanilla import vanilla_download
+from servertypes.fabric import fabric_download
+from servertypes.paper import paper_download
+from servertypes.purpur import purpur_download
+from servertypes.vanilla import vanilla_download
 
 def main():
     parser = argparse.ArgumentParser(description='Universal Version Downloader')
 
-    parser.add_argument('modloader', type=str, help='Selected Modloader / Server Software (Vanilla, Fabric, Paper, PurPur)')
+    parser.add_argument('servertype', type=str, help='Selected Server Type (Vanilla, Fabric, Paper, PurPur)')
     parser.add_argument('versions', nargs='+', help='Selected Version or Versions')
 
     args = parser.parse_args()
-    print("You selected " + args.modloader + " on " + str(args.versions))
+    print("You selected " + args.servertype + " on " + str(args.versions))
 
-    selected_modloader = args.modloader.lower()
+    selected_modloader = args.servertype.lower()
 
     match selected_modloader:
         case "vanilla":
