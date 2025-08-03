@@ -35,6 +35,10 @@ def neoforge_download(versions):
             if neo_version.startswith(version_name_starter):
                 good_version_list.append(neo_version)
 
+        if not good_version_list:
+            print(f"Version {version} not found in NeoForge Maven Data")
+            continue
+
         version_download_url = f"https://maven.neoforged.net/releases/net/neoforged/neoforge/{good_version_list[-1]}/neoforge-{good_version_list[-1]}-installer.jar"
         output_dir = os.path.join("versions/neoforge", version)
         output_file = os.path.join(output_dir, f"{version}.jar")
@@ -81,6 +85,16 @@ def neoforge_download(versions):
         except Exception as e:
             print(f"An error occurred: {e}")
 
+        print("Creating EULA file")
+        eula_dir = os.path.join(output_dir, "eula.txt")
+        with open(eula_dir, "w") as file:
+            file.write("eula=true")
+        print("Created EULA file successfully")
+
+        print("Zipping files")
+        shutil.make_archive(f"{version}", "zip", output_dir)
+        shutil.move(f"{version}.zip", output_dir)
+        print("Finished zipping files")
 
 
 
