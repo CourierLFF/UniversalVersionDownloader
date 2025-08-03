@@ -1,6 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 import os
+import subprocess
 
 
 def neoforge_download(versions):
@@ -46,10 +47,27 @@ def neoforge_download(versions):
             with open(output_file, "wb") as file:
                 for chunk in response.iter_content(8192):
                     file.write(chunk)
-            print("Version downloaded successfully to " + output_dir)
+            print("Version installer downloaded successfully to " + output_dir)
 
         except requests.exceptions.RequestException as e:
-            print(f"Error downloading version: {e}")
+            print(f"Error downloading version installer: {e}")
             continue
 
+        if not os.path.isdir(output_dir):
+            print(f"Error: Directory {output_dir} does not exist")
+            continue
+        else:
+            try:
+                print(f"Installing NeoForge {version} server... (May take a few moments)")
+                result = subprocess.run(["java", "-jar", f"{version}.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
+                print(f"NeoForge {version} server installed successfully")
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing command: {e}")
+                print(f"Stderr: {e.stderr}")
 
+        print("Cleaning NeoForge installed files")
+        for item_name in os.listdir(output_dir):
+            item_path = os.path.join(output_dir, item_name)
+            if os.path.isfile(item_path):
+                os.remove(item_path)
+        print("Cleaned NeoForge installed files successfully")
