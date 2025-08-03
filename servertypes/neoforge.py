@@ -2,6 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import os
 import subprocess
+import shutil
 
 
 def neoforge_download(versions):
@@ -71,3 +72,15 @@ def neoforge_download(versions):
             if os.path.isfile(item_path):
                 os.remove(item_path)
         print("Cleaned NeoForge installed files successfully")
+
+        try:
+            shutil.copy("serverstarterjar/server.jar", output_dir)
+            print(f"Finished copying server starter jar to {output_dir}")
+        except FileNotFoundError:
+            print(f"Server starter jar not found")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+
+
+
