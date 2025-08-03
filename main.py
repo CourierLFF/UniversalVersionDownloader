@@ -1,6 +1,7 @@
 import argparse
 
 from servertypes.fabric import fabric_download
+from servertypes.neoforge import neoforge_download
 from servertypes.paper import paper_download
 from servertypes.purpur import purpur_download
 from servertypes.vanilla import vanilla_download
@@ -25,6 +26,8 @@ def main():
             paper_download(args.versions)
         case "purpur":
             purpur_download(args.versions)
+        case "neoforge":
+            neoforge_download(args.versions)
         case _:
             print("Invalid Modloader / Server Software")
 
