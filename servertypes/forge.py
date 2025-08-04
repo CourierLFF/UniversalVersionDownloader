@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import os
+import subprocess
+import shutil
 
 
 def forge_download(versions):
@@ -53,6 +55,19 @@ def forge_download(versions):
         except requests.exceptions.RequestException as e:
             print(f"Error downloading version installer: {e}")
             continue
+
+        if not os.path.isdir(output_dir):
+            print(f"Error: Directory {output_dir} does not exist")
+            continue
+        else:
+            try:
+                print(f"Installing Forge {version} server... (May take a few moments)")
+                result = subprocess.run(["java", "-jar", f"{version}.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
+                print(f"Forge {version} server installed successfully")
+            except subprocess.CalledProcessError as e:
+                print(f"Error executing command: {e}")
+                print(f"Stderr: {e.stderr}")
+
 
 
 
