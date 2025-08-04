@@ -38,6 +38,9 @@ def forge_download(versions):
             continue
 
         version_download_url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{version}-{latest_forge_version}/forge-{version}-{latest_forge_version}-installer.jar"
+        # For some reason random versions use a different URL scheme, 1.7.10 seems to be the most popular version that uses a different URL scheme, so I'll just hardcode it in for now until I come up with a better solution.
+        if version == "1.7.10":
+            version_download_url = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forge-1.7.10-10.13.4.1614-1.7.10-installer.jar"
         output_dir = os.path.join("versions/forge", version)
         output_file = os.path.join(output_dir, f"{version}.jar")
         os.makedirs(output_dir, exist_ok=True)
