@@ -68,6 +68,27 @@ def forge_download(versions):
                 print(f"Error executing command: {e}")
                 print(f"Stderr: {e.stderr}")
 
+        split_version = version.split(".")
+        if int(split_version[1]) <= 16:
+
+            print("Cleaning Forge installed files")
+            for item_name in os.listdir(output_dir):
+                item_path = os.path.join(output_dir, item_name)
+                if item_name.endswith(".log") or item_name.startswith(f"{version}"):
+                    os.remove(item_path)
+            print("Cleaned NeoForge installed files successfully")
+
+            print("Renaming Forge server jar")
+            for item_name in os.listdir(output_dir):
+                item_path = os.path.join(output_dir, item_name)
+                if item_name.startswith("forge"):
+                    os.rename(item_path, os.path.join(output_dir, "server.jar"))
+            print("Renamed Forge server jar successfully")
+
+        elif int(split_version[1]) <= 20:
+            pass
+        else:
+            pass
 
 
 
