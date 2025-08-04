@@ -5,11 +5,12 @@ from servertypes.neoforge import neoforge_download
 from servertypes.paper import paper_download
 from servertypes.purpur import purpur_download
 from servertypes.vanilla import vanilla_download
+from servertypes.forge import forge_download
 
 def main():
     parser = argparse.ArgumentParser(description='Universal Version Downloader')
 
-    parser.add_argument('servertype', type=str, help='Selected Server Type (Vanilla, Fabric, Paper, PurPur)')
+    parser.add_argument('servertype', type=str, help='Selected Server Type (Vanilla, Fabric, Paper, PurPur, NeoForge, Forge)')
     parser.add_argument('versions', nargs='+', help='Selected Version or Versions')
 
     args = parser.parse_args()
@@ -28,6 +29,8 @@ def main():
             purpur_download(args.versions)
         case "neoforge":
             neoforge_download(args.versions)
+        case "forge":
+            forge_download(args.versions)
         case _:
             print("Invalid Modloader / Server Software")
 
