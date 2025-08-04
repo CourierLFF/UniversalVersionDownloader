@@ -92,8 +92,8 @@ def neoforge_download(versions):
         print("Created EULA file successfully")
 
         print("Zipping files")
-        shutil.make_archive(f"{version}", "zip", output_dir)
-        shutil.move(f"{version}.zip", output_dir)
+        shutil.make_archive(f"{good_version_list[-1]}", "zip", output_dir)
+        shutil.move(f"{good_version_list[-1]}.zip", output_dir)
         print("Finished zipping files")
 
 

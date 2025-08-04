@@ -85,7 +85,18 @@ def forge_download(versions):
                     os.rename(item_path, os.path.join(output_dir, "server.jar"))
             print("Renamed Forge server jar successfully")
 
-        elif int(split_version[1]) <= 20:
+            print("Creating EULA file")
+            eula_dir = os.path.join(output_dir, "eula.txt")
+            with open(eula_dir, "w") as file:
+                file.write("eula=true")
+            print("Created EULA file successfully")
+
+            print("Zipping files")
+            shutil.make_archive(f"{version}", "zip", output_dir)
+            shutil.move(f"{version}.zip", output_dir)
+            print("Finished zipping files")
+
+        elif int(split_version[1]) <= 20 and int(split_version[2]) <= 2:
             pass
         else:
             pass
