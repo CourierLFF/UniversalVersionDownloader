@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import os
 
 
 def forge_download(versions):
@@ -33,6 +34,27 @@ def forge_download(versions):
         else:
             print(f"Cannot find latest forge version for {version}")
             continue
+
+        version_download_url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{version}-{latest_forge_version}/forge-{version}-{latest_forge_version}-installer.jar"
+        output_dir = os.path.join("versions/forge", version)
+        output_file = os.path.join(output_dir, f"{version}.jar")
+        os.makedirs(output_dir, exist_ok=True)
+
+        try:
+            response = requests.get(version_download_url, stream=True)
+            response.raise_for_status()
+
+            print("Downloading Forge " + version + " Installer file")
+            with open(output_file, "wb") as file:
+                for chunk in response.iter_content(8192):
+                    file.write(chunk)
+            print("Version installer downloaded successfully to " + output_dir)
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error downloading version installer: {e}")
+            continue
+
+
 
 
 
