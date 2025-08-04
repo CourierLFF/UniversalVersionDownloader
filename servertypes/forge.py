@@ -8,6 +8,7 @@ import shutil
 
 def forge_download(versions):
     for version in versions:
+        # Forge does not have any kind of easy API or simple URL scheme for finding versions and downloading them. So instead the HTML of the website is scraped to find the latest version of forge for the selected Minecraft version and then a URL is formed from it.
         print("Downloading Forge Files HTML")
         forge_files_url = f"https://files.minecraftforge.net/net/minecraftforge/forge/index_{version}.html"
         forge_files_html = ""
@@ -24,7 +25,7 @@ def forge_download(versions):
             print(f"Error downloading Forge Files HTML, invalid version: {e}")
             continue
 
-
+        # Parsing the HTML to find the meta description tag in the head. This tag contains the lastest version of the selected Minecraft version.
         soup = BeautifulSoup(forge_files_html, "html.parser")
 
         description_tag = soup.find("meta", property="og:description")
@@ -71,6 +72,10 @@ def forge_download(versions):
                 print(f"Error executing command: {e}")
                 print(f"Stderr: {e.stderr}")
 
+        # Forge versions have changed a bit throughout all their versions, different files are required to be renamed and kept inside the server files for the version to boot properly.
+        # Forge Version < 16 needs server.jar rename from forge jar
+        # Forge Version <= 1.20.2 and > 16 needs libraries folder
+        # Forge Version > 1.20.2 needs shim renamed and libraries folder
         split_version = version.split(".")
         if int(split_version[1]) <= 16:
 

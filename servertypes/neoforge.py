@@ -7,6 +7,7 @@ import shutil
 
 def neoforge_download(versions):
     print("Downloading NeoForge Maven Data")
+    # NeoForge has a helpful XML document that contains the names of all the NeoForge versions.
     maven_url = "https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml"
     versions_list = []
 
@@ -22,12 +23,16 @@ def neoforge_download(versions):
 
     root = ET.fromstring(maven_xml)
 
+    # Parse the XML document to find all versions and then add them to a list containing all versions correlating to the selected Minecraft version
     for versionMeta in root.findall(".//versions"):
         for metaVersions in versionMeta:
             versions_list.append(metaVersions.text)
 
     for version in versions:
         split_version = version.split('.')
+        # NeoForge versions have a consistent naming scheme. They begin with the minor version in Minecraft, then have the patch number, then the NeoForge patch number.
+        # Some examples of this would be all Minecraft 1.21.1 NeoForge versions starting with 21.1. and all 1.20.4 versions starting with 20.4.
+        # This consistent naming scheme is used to find all NeoForge versions compatible with our selected Minecraft version, and then select the latest one.
         version_name_starter = f"{split_version[1]}.{split_version[2]}"
 
         good_version_list = []

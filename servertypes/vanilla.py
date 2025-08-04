@@ -5,6 +5,7 @@ import os
 def vanilla_download(versions):
     for version in versions:
         print("Downloading Vanilla " + version)
+        # Vanilla has a json file that contains all version information including server jar download links
         manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
         manifest_json = ""
 
@@ -21,6 +22,7 @@ def vanilla_download(versions):
         version_url = ""
         version_json = ""
 
+        # Load the json file as an object and find the selected Minecraft version in the json, then get the URL to that specific version's json file
         manifest_object = json.loads(manifest_json)
         for manifest_version in manifest_object["versions"]:
             if manifest_version["id"] == version:
@@ -38,6 +40,7 @@ def vanilla_download(versions):
             print(f"Error saving version: {e}")
             continue
 
+        # Load the version json into an object and then get the server download URL from it
         version_object = json.loads(version_json)
 
         version_download_url = version_object["downloads"]["server"]["url"]

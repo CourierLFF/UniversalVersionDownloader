@@ -19,6 +19,7 @@ def paper_download(versions):
             print(f"Error saving paper builds: {e}")
             continue
 
+        # Parse the builds json and get the latest paper build for the selected version
         version_download_url = paper_builds_json[0]["downloads"]["server:default"]["url"]
         output_dir = os.path.join("versions/paper", version)
         output_file = os.path.join(output_dir, f"{version}.jar")
