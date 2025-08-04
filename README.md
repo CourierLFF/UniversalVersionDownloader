@@ -11,14 +11,15 @@ A script for downloading server versions from multiple Minecraft server types
 
 ## Installation
 
+Dependencies install
+
+`pip install -r requirements.txt`
+
 ### Prerequisites
 - Java 21
 - Python 3.13 (Most versions of Python 3 should work, but this is the version I tested)
 
 ## Usage
-First, install the dependencies
-
-`pip install -r requirements.txt`
 
 The syntax for this script looks like this. Ensure that each version is seperated by a space. Only one modloader supported for each command.
 
