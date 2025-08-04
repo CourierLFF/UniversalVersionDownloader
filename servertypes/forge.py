@@ -97,7 +97,25 @@ def forge_download(versions):
             print("Finished zipping files")
 
         elif int(split_version[1]) <= 20 and int(split_version[2]) <= 2:
-            pass
+
+            print("Cleaning Forge installed files")
+            for item_name in os.listdir(output_dir):
+                item_path = os.path.join(output_dir, item_name)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+            print("Cleaned NeoForge installed files successfully")
+
+            print("Creating EULA file")
+            eula_dir = os.path.join(output_dir, "eula.txt")
+            with open(eula_dir, "w") as file:
+                file.write("eula=true")
+            print("Created EULA file successfully")
+
+            print("Zipping files")
+            shutil.make_archive(f"{version}", "zip", output_dir)
+            shutil.move(f"{version}.zip", output_dir)
+            print("Finished zipping files")
+
         else:
             pass
 
