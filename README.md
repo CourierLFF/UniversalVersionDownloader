@@ -23,7 +23,7 @@ Dependencies install
 
 The syntax for this script looks like this. Ensure that each version is seperated by a space. Only one modloader supported for each command.
 
-`python .\main [modloader] [versions]`
+`python .\main.py [modloader] [versions]`
 
 When finished, the script will make a versions directory in the script's directory and put the downloaded and installed files into there. It will rename the .jar files for Vanilla, Fabric, PurPur and Paper into [Minecraft version].jar. For NeoForge and Forge, it will archive neccesary files into a zip file and rename it to [Minecraft version].zip for Forge and [NeoForge version].zip for NeoForge.
 
