@@ -411,6 +411,9 @@ def main():
     selected_modloader = os.environ.get("SERVER_TYPE")
     version = os.environ.get("MINECRAFT_VERSION")
 
+    selected_modloader = selected_modloader.lower()
+    version = version.lower()
+
     if selected_modloader == "vanilla":
         vanilla_download(version)
     elif selected_modloader == "fabric":
