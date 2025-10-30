@@ -383,8 +383,8 @@ def forge_download(version):
         print("Finished zipping files")
 
 def main():
-    selected_modloader = "purpur"
-    version = "1.21.10"
+    selected_modloader = os.environ.get("SERVER_TYPE")
+    version = os.environ.get("MINECRAFT_VERSION")
 
     match selected_modloader:
         case "vanilla":
