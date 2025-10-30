@@ -49,7 +49,7 @@ def vanilla_download(version):
     version_object = json.loads(version_json)
 
     version_download_url = version_object["downloads"]["server"]["url"]
-    output_dir = "/"
+    output_dir = "/mnt/server"
     output_file = os.path.join(output_dir, "server.jar")
     os.makedirs(output_dir, exist_ok=True)
 
@@ -69,10 +69,17 @@ def vanilla_download(version):
     
     # Copy server jar to also have prod ready format
     try:
-        shutil.copyfile(output_file, f"/{version}.jar")
+        shutil.copyfile("/mnt/server/server.jar", f"/mnt/server/{version}.jar")
+        print("copied file")
     except FileNotFoundError as e:
         print(f"Error copying file: {e}")
         return None
+    
+    print("Creating EULA file")
+    eula_dir = os.path.join(output_dir, "eula.txt")
+    with open(eula_dir, "w") as file:
+        file.write("eula=true")
+    print("Created EULA file successfully")    
 
 def fabric_download(version):
     fabric_loader_version = ""
