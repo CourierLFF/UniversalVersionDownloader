@@ -156,8 +156,37 @@ def paper_download(version):
         print(f"Error copying file: {e}")
         return None
 
+def purpur_download(version):
+    print("Downloading PurPur " + version)
+
+    version_download_url = f"https://api.purpurmc.org/v2/purpur/{version}/latest/download"
+    output_dir = "/"
+    output_file = os.path.join(output_dir, "server.jar")
+    os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        response = requests.get(version_download_url, stream=True)
+        response.raise_for_status()
+
+        print("Downloading PurPur " + version + " JAR file")
+        with open(output_file, "wb") as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+        print("Version downloaded successfully to " + output_dir)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading version: {e}")
+        return None
+    
+    # Copy server jar to also have prod ready format
+    try:
+        shutil.copyfile(output_file, f"/{version}.jar")
+    except FileNotFoundError as e:
+        print(f"Error copying file: {e}")
+        return None
+
 def main():
-    selected_modloader = "paper"
+    selected_modloader = "purpur"
     version = "1.21.10"
 
     match selected_modloader:
@@ -167,8 +196,8 @@ def main():
             fabric_download(version)
         case "paper":
             paper_download(version)
-        # case "purpur":
-        #     purpur_download(version)
+        case "purpur":
+            purpur_download(version)
         # case "neoforge":
         #     neoforge_download(version)
         # case "forge":
