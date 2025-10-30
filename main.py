@@ -386,20 +386,19 @@ def main():
     selected_modloader = os.environ.get("SERVER_TYPE")
     version = os.environ.get("MINECRAFT_VERSION")
 
-    match selected_modloader:
-        case "vanilla":
-            vanilla_download(version)
-        case "fabric":
-            fabric_download(version)
-        case "paper":
-            paper_download(version)
-        case "purpur":
-            purpur_download(version)
-        case "neoforge":
-            neoforge_download(version)
-        case "forge":
-            forge_download(version)
-        case _:
-            print("Invalid Modloader / Server Software")
+    if selected_modloader == "vanilla":
+        vanilla_download(version)
+    elif selected_modloader == "fabric":
+        fabric_download(version)
+    elif selected_modloader == "paper":
+        paper_download(version)
+    elif selected_modloader == "purpur":
+        purpur_download(version)
+    elif selected_modloader == "neoforge":
+        neoforge_download(version)
+    elif selected_modloader == "forge":
+        forge_download(version)
+    else:
+        print("Invalid Modloader / Server Software")
 
 main()
