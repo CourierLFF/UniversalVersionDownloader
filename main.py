@@ -255,7 +255,7 @@ def neoforge_download(version):
         return None
 
     version_download_url = f"https://maven.neoforged.net/releases/net/neoforged/neoforge/{good_version_list[-1]}/neoforge-{good_version_list[-1]}-installer.jar"
-    output_dir = "/"
+    output_dir = "/mnt/server"
     output_file = os.path.join(output_dir, "installer.jar")
     os.makedirs(output_dir, exist_ok=True)
 
@@ -279,7 +279,7 @@ def neoforge_download(version):
     else:
         try:
             print(f"Installing NeoForge {version} server... (May take a few moments)")
-            result = subprocess.run(["java", "-jar", "/installer.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
+            result = subprocess.run(["java", "-jar", "/mnt/server/installer.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
             print(f"NeoForge {version} server installed successfully")
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")
@@ -289,24 +289,24 @@ def neoforge_download(version):
     print("Cleaning NeoForge installed files")
     for item_name in os.listdir(output_dir):
         item_path = os.path.join(output_dir, item_name)
-        if os.path.isfile(item_path):
+        if os.path.isfile(item_path) and not "universalversiondownloader" in item_name:
             os.remove(item_path)
     print("Cleaned NeoForge installed files successfully")
 
-    try:
-        response = requests.get("https://github.com/neoforged/ServerStarterJar/releases/download/0.1.34/server.jar", stream=True)
-        response.raise_for_status()
+    # try:
+    #     response = requests.get("https://github.com/neoforged/ServerStarterJar/releases/download/0.1.34/server.jar", stream=True)
+    #     response.raise_for_status()
 
-        with open("/server.jar", "wb") as file:
-            for chunk in response.iter_content(8192):
-                file.write(chunk)
-        print(f"Finished downloading server starter jar")
-    except requests.exceptions.RequestException as e:
-        print(f"Error downloading version installer: {e}")
-        return None
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    #     with open("/mnt/server/server.jar", "wb") as file:
+    #         for chunk in response.iter_content(8192):
+    #             file.write(chunk)
+    #     print(f"Finished downloading server starter jar")
+    # except requests.exceptions.RequestException as e:
+    #     print(f"Error downloading version installer: {e}")
+    #     return None
+    # except Exception as e:
+    #     print(f"An error occurred: {e}")
+    #     return None
     
     print("Creating EULA file")
     eula_dir = os.path.join(output_dir, "eula.txt")
@@ -315,8 +315,19 @@ def neoforge_download(version):
     print("Created EULA file successfully")
 
     print("Zipping files")
-    shutil.make_archive(f"{good_version_list[-1]}", "zip", output_dir)
-    shutil.move(f"{good_version_list[-1]}.zip", output_dir)
+    # zip files but exclude the python script itself
+    zip_path = os.path.join(output_dir, f"{good_version_list[-1]}.zip")
+
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, dirs, files in os.walk(output_dir):
+            for file in files:
+                # skip the Python script and the output zip file
+                if file in ("universalversiondownloader.py", f"{good_version_list[-1]}.zip"):
+                    continue
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, output_dir)
+                zipf.write(file_path, arcname)
+
     print("Finished zipping files")
 
 def forge_download(version):
@@ -424,7 +435,6 @@ def main():
     version = os.environ.get("MINECRAFT_VERSION")
 
     selected_modloader = selected_modloader.lower()
-    version = version.lower()
 
     if selected_modloader == "vanilla":
         vanilla_download(version)
