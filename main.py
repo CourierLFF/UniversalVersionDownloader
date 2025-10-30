@@ -62,15 +62,51 @@ def vanilla_download(version):
         print(f"Error downloading version: {e}")
         return None
 
+def fabric_download(version):
+    fabric_loader_version = ""
+    # Get all fabric loader versions
+    response = requests.get("https://meta.fabricmc.net/v2/versions/loader")
+    data = response.json()
+
+    # Select newest fabric loader version
+    if data:
+        fabric_loader_version = data[0]["version"]
+        print(f"Latest Fabric Loader version: {fabric_loader_version}")
+    else:
+        print("Could not retrieve Fabric Loader versions.")
+        return None
+
+    print("Downloading Fabric " + version)
+
+    # Fabric offers this URL on their server download page. 1.1.0 represents the installer version. This installer version may need to be changed in the future for compatibility, but as of now it updates infrequently enough and doesn't seem to have any compatibility issues.
+    version_download_url = f"https://meta.fabricmc.net/v2/versions/loader/{version}/{fabric_loader_version}/1.1.0/server/jar"
+    output_dir = "/"
+    output_file = os.path.join(output_dir, "server.jar")
+    os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        response = requests.get(version_download_url, stream=True)
+        response.raise_for_status()
+
+        print("Downloading Fabric " + version + " JAR file")
+        with open(output_file, "wb") as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+        print("Version downloaded successfully to " + output_dir)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading version: {e}")
+        return None
+
 def main():
-    selected_modloader = "vanilla"
+    selected_modloader = "fabric"
     version = "1.21.10"
 
     match selected_modloader:
         case "vanilla":
             vanilla_download(version)
-        # case "fabric":
-        #     fabric_download(version)
+        case "fabric":
+            fabric_download(version)
         # case "paper":
         #     paper_download(version)
         # case "purpur":
