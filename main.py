@@ -113,8 +113,51 @@ def fabric_download(version):
         print(f"Error copying file: {e}")
         return None
 
+def paper_download(version):
+    print("Downloading Paper " + version)
+    paper_builds_url = f"https://fill.papermc.io/v3/projects/paper/versions/{version}/builds"
+    paper_builds_json = ""
+
+    try:
+        response = requests.get(paper_builds_url)
+        response.raise_for_status()
+
+        paper_builds_json = response.json()
+
+        print("Paper builds JSON saved successfully")
+    except requests.exceptions.RequestException as e:
+        print(f"Error saving paper builds: {e}")
+        return None
+
+    # Parse the builds json and get the latest paper build for the selected version
+    version_download_url = paper_builds_json[0]["downloads"]["server:default"]["url"]
+    output_dir = "/"
+    output_file = os.path.join(output_dir, "server.jar")
+    os.makedirs(output_dir, exist_ok=True)
+
+    try:
+        response = requests.get(version_download_url, stream=True)
+        response.raise_for_status()
+
+        print("Downloading Paper " + version + " JAR file")
+        with open(output_file, "wb") as file:
+            for chunk in response.iter_content(8192):
+                file.write(chunk)
+        print("Version downloaded successfully to " + output_dir)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error downloading version: {e}")
+        return None
+    
+    # Copy server jar to also have prod ready format
+    try:
+        shutil.copyfile(output_file, f"/{version}.jar")
+    except FileNotFoundError as e:
+        print(f"Error copying file: {e}")
+        return None
+
 def main():
-    selected_modloader = "fabric"
+    selected_modloader = "paper"
     version = "1.21.10"
 
     match selected_modloader:
@@ -122,8 +165,8 @@ def main():
             vanilla_download(version)
         case "fabric":
             fabric_download(version)
-        # case "paper":
-        #     paper_download(version)
+        case "paper":
+            paper_download(version)
         # case "purpur":
         #     purpur_download(version)
         # case "neoforge":
