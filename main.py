@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import shutil
+import zipfile
 import xml.etree.ElementTree as ET
 import subprocess
 from bs4 import BeautifulSoup
@@ -351,7 +352,7 @@ def forge_download(version):
 
     version_download_url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{version}-{latest_forge_version}/forge-{version}-{latest_forge_version}-installer.jar"
     # For some reason random versions use a different URL scheme, 1.7.10 seems to be the most popular version that uses a different URL scheme, so I'll just hardcode it in for now until I come up with a better solution.
-    output_dir = "/"
+    output_dir = "/mnt/server"
     output_file = os.path.join(output_dir, "installer.jar")
     os.makedirs(output_dir, exist_ok=True)
 
@@ -375,7 +376,7 @@ def forge_download(version):
     else:
         try:
             print(f"Installing Forge {version} server... (May take a few moments)")
-            result = subprocess.run(["java", "-jar", "installer.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
+            result = subprocess.run(["java", "-jar", "/mnt/server/installer.jar", "--installServer"], cwd=output_dir, capture_output=True, text=True, check=True)
             print(f"Forge {version} server installed successfully")
         except subprocess.CalledProcessError as e:
             print(f"Error executing command: {e}")
@@ -385,7 +386,7 @@ def forge_download(version):
         print("Cleaning Forge installed files")
         for item_name in os.listdir(output_dir):
             item_path = os.path.join(output_dir, item_name)
-            if os.path.isfile(item_path) and not "shim" in item_name:
+            if os.path.isfile(item_path) and not "shim" in item_name and not "universalversiondownloader" in item_name:
                 os.remove(item_path)
         print("Cleaned Forge installed files successfully")
 
@@ -403,8 +404,19 @@ def forge_download(version):
         print("Created EULA file successfully")
 
         print("Zipping files")
-        shutil.make_archive(f"{version}", "zip", output_dir)
-        shutil.move(f"{version}.zip", output_dir)
+        # zip files but exclude the python script itself
+        zip_path = os.path.join(output_dir, f"{version}.zip")
+
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for root, dirs, files in os.walk(output_dir):
+                for file in files:
+                    # skip the Python script and the output zip file
+                    if file in ("universalversiondownloader.py", f"{version}.zip"):
+                        continue
+                    file_path = os.path.join(root, file)
+                    arcname = os.path.relpath(file_path, output_dir)
+                    zipf.write(file_path, arcname)
+
         print("Finished zipping files")
 
 def main():
