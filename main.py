@@ -130,7 +130,6 @@ def fabric_download(version):
         file.write("eula=true")
     print("Created EULA file successfully")    
 
-
 def paper_download(version):
     print("Downloading Paper " + version)
     paper_builds_url = f"https://fill.papermc.io/v3/projects/paper/versions/{version}/builds"
@@ -149,7 +148,7 @@ def paper_download(version):
 
     # Parse the builds json and get the latest paper build for the selected version
     version_download_url = paper_builds_json[0]["downloads"]["server:default"]["url"]
-    output_dir = "/"
+    output_dir = "/mnt/server"
     output_file = os.path.join(output_dir, "server.jar")
     os.makedirs(output_dir, exist_ok=True)
 
@@ -169,10 +168,16 @@ def paper_download(version):
     
     # Copy server jar to also have prod ready format
     try:
-        shutil.copyfile(output_file, f"/{version}.jar")
+        shutil.copyfile("/mnt/server/server.jar", f"/mnt/server/{version}.jar")
     except FileNotFoundError as e:
         print(f"Error copying file: {e}")
         return None
+    
+    print("Creating EULA file")
+    eula_dir = os.path.join(output_dir, "eula.txt")
+    with open(eula_dir, "w") as file:
+        file.write("eula=true")
+    print("Created EULA file successfully")    
 
 def purpur_download(version):
     print("Downloading PurPur " + version)
