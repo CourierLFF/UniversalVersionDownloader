@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import shutil
 
 def vanilla_download(version):
     print("Downloading Vanilla " + version)
@@ -61,6 +62,13 @@ def vanilla_download(version):
     except requests.exceptions.RequestException as e:
         print(f"Error downloading version: {e}")
         return None
+    
+    # Copy server jar to also have prod ready format
+    try:
+        shutil.copyfile(output_file, f"/{version}.jar")
+    except FileNotFoundError as e:
+        print(f"Error copying file: {e}")
+        return None
 
 def fabric_download(version):
     fabric_loader_version = ""
@@ -96,6 +104,13 @@ def fabric_download(version):
 
     except requests.exceptions.RequestException as e:
         print(f"Error downloading version: {e}")
+        return None
+    
+    # Copy server jar to also have prod ready format
+    try:
+        shutil.copyfile(output_file, f"/{version}.jar")
+    except FileNotFoundError as e:
+        print(f"Error copying file: {e}")
         return None
 
 def main():
