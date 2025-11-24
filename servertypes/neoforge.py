@@ -33,7 +33,7 @@ def neoforge_download(versions):
         # NeoForge versions have a consistent naming scheme. They begin with the minor version in Minecraft, then have the patch number, then the NeoForge patch number.
         # Some examples of this would be all Minecraft 1.21.1 NeoForge versions starting with 21.1. and all 1.20.4 versions starting with 20.4.
         # This consistent naming scheme is used to find all NeoForge versions compatible with our selected Minecraft version, and then select the latest one.
-        version_name_starter = f"{split_version[1]}.{split_version[2]}"
+        version_name_starter = f"{split_version[1]}.{split_version[2]}."
 
         good_version_list = []
         for neo_version in versions_list:
